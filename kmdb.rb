@@ -136,8 +136,9 @@ puts ""
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
 
-Movie.includes(:studio).order(:id).each do |m|
-  puts "#{m.title.ljust(22)} #{m.year_released.to_s.ljust(14)} #{m.rated.ljust(6)} #{m.studio.name}"
+movies = Movie.joins(:studio).order(:id)
+for m in movies
+  puts "#{m["title"].ljust(22)} #{m["year_released"].to_s.ljust(14)} #{m["rated"].ljust(6)} #{m.studio["name"]}"
 end
 
 # Prints a header for the cast output
@@ -149,8 +150,9 @@ puts ""
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
 
-Role.includes(:movie, :actor).order(:movie_id, :id).each do |r|
-  puts "#{r.movie.title.ljust(22)} #{r.actor.name.ljust(20)} #{r.character_name}"
+roles = Role.joins(:movie, :actor).order(:movie_id, :id)
+for r in roles
+  puts "#{r.movie["title"].ljust(22)} #{r.actor["name"].ljust(20)} #{r["character_name"]}"
 end
 
 # Prints a header for the agent's list of represented actors output
@@ -162,6 +164,7 @@ puts ""
 # Query the actor data and loop through the results to display the agent's list of represented actors output.
 # TODO!
 
-Actor.where(agent: ari).order(:id).each do |a|
-  puts a.name
+represented = Actor.where({ "agent_id" => ari["id"] }).order(:id)
+for a in represented
+  puts a["name"]
 end
